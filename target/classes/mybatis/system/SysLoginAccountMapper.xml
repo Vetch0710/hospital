@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.SysLoginAccountMapper">
+
+    <resultMap type="Account" id="LoginAccountResult">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="name"/>
+        <result property="password" column="password"/>
+        <result property="role" column="role_name"/>
+        <result property="roleId" column="role_id"/>
+    </resultMap>
+    <resultMap type="SysMenu" id="SysMenuResult">
+        <id     property="menuId"         column="menu_id"        />
+        <result property="menuName"       column="menu_name"      />
+        <result property="parentName"     column="parent_name"    />
+        <result property="parentId"       column="parent_id"      />
+        <result property="orderNum"       column="order_num"      />
+        <result property="path"           column="path"           />
+        <result property="component"      column="component"      />
+        <result property="isFrame"        column="is_frame"       />
+        <result property="menuType"       column="menu_type"      />
+        <result property="visible"        column="visible"        />
+        <result property="status"         column="status"         />
+        <result property="perms"          column="perms"          />
+        <result property="icon"           column="icon"           />
+        <result property="createBy"       column="create_by"      />
+        <result property="createTime"     column="create_time"    />
+        <result property="updateTime"     column="update_time"    />
+        <result property="updateBy"       column="update_by"      />
+        <result property="remark"         column="remark"         />
+    </resultMap>
+
+    <sql id="selectAccountVo">
+        select name,password,user_id,r.role_name,r.role_id
+        from sys_account u
+                 left join sys_role r on r.role_id = u.role_id
+    </sql>
+
+
+    <select id="selectAccountByUserName" parameterType="String" resultMap="LoginAccountResult">
+        <include refid="selectAccountVo"/>
+        where u.name = #{userName}
+    </select>
+
+    <select id="selectAccountById" parameterType="Long" resultMap="LoginAccountResult">
+        <include refid="selectAccountVo"/>
+        where u.user_id = #{userId}
+    </select>
+
+    <select id="selectMenuPermsByRoleId" parameterType="Long" resultType="String">
+        select distinct m.perms
+        from sys_menu m
+                 left join sys_role_menu rm on m.menu_id = rm.menu_id
+                 left join sys_account ur on rm.role_id = ur.role_id
+                 left join sys_role r on r.role_id = ur.role_id
+        where ur.role_id = #{roleId}
+    </select>
+
+
+    <select id="selectMenuTreeByRoleId" parameterType="Long" resultMap="SysMenuResult">
+        select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status, ifnull(m.perms,'') as perms, m.is_frame, m.menu_type, m.icon, m.order_num
+        from sys_menu m
+                 left join sys_role_menu rm on m.menu_id = rm.menu_id
+        where rm.role_id = #{roleId} and m.menu_type in ('M', 'C') and m.status = 0
+        order by m.parent_id, m.order_num
+    </select>
+</mapper> 
