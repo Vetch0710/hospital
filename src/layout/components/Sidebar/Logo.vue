@@ -1,11 +1,11 @@
 <template>
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
+      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" :to="path">
         <img v-if="logo" :src="logo" class="sidebar-logo">
         <h1 v-else class="sidebar-title">{{ title }} </h1>
       </router-link>
-      <router-link v-else key="expand" class="sidebar-logo-link" to="/">
+      <router-link v-else key="expand" class="sidebar-logo-link" :to="path">
         <img v-if="logo" :src="logo" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }} </h1>
       </router-link>
@@ -25,10 +25,25 @@ export default {
       required: true
     }
   },
+  created() {
+    this.role=this.$store.getters.roles[0];
+    if (this.role==='管理员'){
+      this.path= '/user';
+    }else if (this.role==='医生'){
+      this.path= '/doctorInfo';
+
+    }else {
+      this.path= '/patient';
+
+    }
+
+  },
   data() {
     return {
       title: this.getTitle,
-      logo: logoImg
+      logo: logoImg,
+      role:this.$store.getters.roles[0],
+      path:'',
     }
   }
 }

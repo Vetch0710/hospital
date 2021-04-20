@@ -15,7 +15,6 @@
 <script>
 import Logo from "@/assets/logo/clock_black.png";
 import Noti from '../components/Noti' //暂未完全封装
-import { listInfo, getInfo,setSureState } from "@/api/happyclock/noti";
 
 // import notidetail from '../utils/notidetail.js'
 

@@ -33,6 +33,9 @@
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <router-link to="/register" class="toRegister" >
+        立即注册
+      </router-link>
       <el-form-item style="width:100%;">
         <el-button
           :loading="loading"
@@ -146,6 +149,12 @@
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+  .toRegister{
+    float: right;
+    color: #606266;
+    font-size: 14px;
+  }
+
   .login {
     display: flex;
     justify-content: center;
@@ -192,7 +201,6 @@
     width: 33%;
     height: 38px;
     float: right;
-
     img {
       cursor: pointer;
       vertical-align: middle;
