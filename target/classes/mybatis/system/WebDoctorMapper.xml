@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.WebDoctorMapper">
+
+
+    <resultMap type="WebDoctor" id="doctorVo">
+        <result property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="doctorId" column="doctor_id"/>
+        <result property="avatar" column="avatar"/>
+        <result property="realName" column="realName"/>
+        <result property="position" column="position"/>
+        <result property="department" column="department"/>
+        <result property="specialty" column="specialty"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+
+    <select id="selectDoctorByUserId" parameterType="Long" resultMap="doctorVo">
+        select d.*,sa.name,sa.password
+        from web_doctor d
+        left join sys_account sa on d.user_id = sa.user_id
+        where d.user_id = #{userId}
+    </select>
+
+
+
+
+    <insert id="insertDoctor" parameterType="WebDoctor"  >
+        insert into web_doctor(avatar, realName, position, department, specialty, status, user_id)
+        values (default, #{doctor.avatar}, #{doctor.position}, #{doctor.department}, #{doctor.specialty}, '0', #{doctor.user_id})
+    </insert>
+
+    <insert id="insertDAccount" parameterType="WebDoctor" keyProperty="doctor.userId" keyColumn="user_id">
+        insert into sys_account(user_id, name, password, role_id)
+        values (default, #{Doctor.name}, #{Doctor.password},'2')
+    </insert>
+
+    <update id="updateDoctor" parameterType="WebDoctor">
+        update web_doctor
+        <set>
+            position = #{doctor.position},
+            department = #{doctor.department},
+            specialty = #{doctor.specialty},
+        </set>
+        where user_id = #{doctor.userId}
+    </update>
+    <update id="updateDoctorAvatar" >
+        update web_doctor
+        <set>
+            avatar = #{avatar},
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <update id="updateDAccount" parameterType="WebDoctor">
+        update sys_account
+        <set>
+            name = #{doctor.name},
+            password = #{doctor.password}
+        </set>
+
+        where user_id = #{doctor.userId}
+    </update>
+
+
+</mapper>

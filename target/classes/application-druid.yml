@@ -72,8 +72,8 @@ ruoyi:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/upload，Linux配置 ）
-  profile: /pro/resume/uploadAnddownload
-#  profile: C:/Users/75440/Desktop/upload
+#  profile: /pro/resume/uploadAnddownload
+  profile: C:/Users/75440/Desktop/upload
 #  profile: uploadAnddownload
   # 获取ip地址开关
   addressEnabled: false

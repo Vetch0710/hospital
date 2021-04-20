@@ -5,8 +5,10 @@ import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.project.system.domain.Account;
 import com.ruoyi.project.system.domain.SysMenu;
+import com.ruoyi.project.system.domain.WebDoctor;
 import com.ruoyi.project.system.mapper.SysLoginAccountMapper;
 import com.ruoyi.project.system.service.ISysLoginAccountService;
+import com.ruoyi.project.system.service.WebDoctorService;
 import com.ruoyi.project.system.service.impl.SysLoginAccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +36,8 @@ public class SysLoginController
     @Autowired
     private SysLoginService loginService;
 
-   /* @Autowired
-    private ISysMenuService menuService;*/
+    @Autowired
+    private WebDoctorService webDoctorService;
 
     @Autowired
     private ISysLoginAccountService iSysLoginAccountService;
@@ -70,9 +72,14 @@ public class SysLoginController
         Account user = loginUser.getUser();
         // 角色集合
         Set<String> roles = new HashSet<>(Arrays.asList(user.getRole()));
+
         // 权限集合
         Set<String> permissions = iSysLoginAccountService.selectMenuPermsByRoleId(user.getRoleId());
         AjaxResult ajax = AjaxResult.success();
+        if (roles.iterator().next().equals("医生") ){
+            WebDoctor webDoctor = webDoctorService.selectDoctorByUserId(user.getUserId());
+            ajax.put("avatar", webDoctor.getAvatar());
+        }
         ajax.put("user", user);
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);

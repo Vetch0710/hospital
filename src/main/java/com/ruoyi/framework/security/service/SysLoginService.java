@@ -55,7 +55,7 @@ public class SysLoginService
      * 后台登录验证
      * @param username 用户名
      * @param password 密码
-     * @param captcha 验证码
+     * @param code 验证码
      * @param uuid 唯一标识
      * @return 结果
      */
@@ -82,7 +82,7 @@ public class SysLoginService
         try
         {
             UserDetails userDetails = adminUserDetailsService.loadUserByUsername(username);
-            if (!SecurityUtils.matchesPassword(password,userDetails.getPassword())) {
+            if (!password.equals(userDetails.getPassword())) {
                 throw new BadCredentialsException("密码不正确");
             }
             //获取权限
@@ -108,7 +108,33 @@ public class SysLoginService
         // 生成token
         return tokenService.createToken(loginUser);
     }
-    
+
+     /**
+     * 验证验证码
+     * @param code 验证码
+     * @param uuid 唯一标识
+     * @return 结果
+     */
+    public boolean checkCode( String code, String uuid)
+    {   //获取uuid
+        String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
+        //从缓存中获取验证码
+        String captcha = ehcacheClient.get(verifyKey);
+        //删除缓存中的验证码
+        ehcacheClient.delete(verifyKey);
+        //验证验证码
+        if (captcha == null ) //验证码过期
+        {
+            throw new CaptchaExpireException();
+        }
+        if (!code.equalsIgnoreCase(captcha))//验证码错误
+        {
+            throw new CaptchaException();
+        }
+
+        return true;
+    }
+
 
 
     

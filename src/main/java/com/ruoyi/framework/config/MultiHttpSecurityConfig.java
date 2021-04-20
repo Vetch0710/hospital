@@ -112,6 +112,7 @@ public class MultiHttpSecurityConfig  {
             		.antMatcher("/gen/**")
             		.antMatcher("/common/**")
             		.antMatcher("/dq/**")
+
                     // 过滤请求
                     .authorizeRequests()
                     // 除上面外的所有请求全部需要鉴权认证
@@ -150,6 +151,7 @@ public class MultiHttpSecurityConfig  {
                     .authorizeRequests()
                     // 对于登录login 验证码captchaImage 允许匿名访问
                     .antMatchers("/login").anonymous()
+                    .antMatchers("/web/patient/register").anonymous()
                     .antMatchers("/profile/**").anonymous()
                     .antMatchers("/common/download**").anonymous()
                     .antMatchers("/common/download/resource**").anonymous()
