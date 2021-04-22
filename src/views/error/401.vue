@@ -33,7 +33,7 @@ export default {
   created() {
     this.role=this.$store.getters.roles[0];
     if (this.role==='管理员'){
-      this.path= '/user';
+      this.path= '/dpinfo';
     }else if (this.role==='医生'){
       this.path= '/doctorInfo';
 

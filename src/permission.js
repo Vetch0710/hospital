@@ -42,9 +42,9 @@ router.beforeEach((to, from, next) => {
       } else {
         let role=store.getters.roles[0];
         let path;
-        if (from.path==='/login'&&(to.path!=='/user'&&to.path!=='/doctorInfo'&&to.path!=='/patient')){
+        if (from.path==='/login'&&(to.path!=='/dpinfo'&&to.path!=='/doctorInfo'&&to.path!=='/patient')){
           if (role === '管理员') {
-            path = '/user'
+            path = '/dpinfo'
           } else if (role === '医生') {
             path = '/doctorInfo'
           } else {
