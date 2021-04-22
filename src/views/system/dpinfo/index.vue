@@ -139,6 +139,7 @@ import Edit from './edit'
     methods: {
       /** 查询用户列表 */
       getList() {
+        console.log(111111111111)
         this.loading = true
         listADoctor(this.queryParams).then(response => {
             console.log(response)
