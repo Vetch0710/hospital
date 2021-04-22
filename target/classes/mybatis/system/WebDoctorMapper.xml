@@ -18,7 +18,92 @@
         <result property="status" column="status"/>
     </resultMap>
 
+    <resultMap type="ADoctor" id="ADoctorVo">
+        <result property="userId" column="user_id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="doctorId" column="doctor_id"/>
+        <result property="avatar" column="avatar"/>
+        <result property="realName" column="realName"/>
+        <result property="position" column="position"/>
+        <result property="department" column="department"/>
+        <result property="specialty" column="specialty"/>
+        <result property="status" column="status"/>
+        <result property="seeTime" column="seeTime"/>
+        <result property="maxNum" column="maxNum"/>
+        <result property="remanNum" column="remanNum"/>
+    </resultMap>
 
+    <select id="selectADoctorByQuery" parameterType="QueryVo" resultMap="ADoctorVo">
+        select d.*,sm.seeTime,sm.maxNum,sm.remanNum
+        from web_doctor d
+                 left join sys_message sm on d.doctor_id = sm.doctor_id
+        <where>
+            <if test="realName != null and realName != ''">
+                AND d.realName like concat('%', #{realName}, '%')
+            </if>
+            <if test="doctorId != null and doctorId != 0 ">
+                AND d.doctor_id= #{doctorId}
+            </if>
+
+        </where>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <insert id="insertADoctor" parameterType="ADoctor">
+        insert into sys_message(message_id, seeTime, maxNum, remanNum, doctor_id)
+        values (default, #{doctor.seeTime}, #{doctor.maxNum}, #{doctor.maxNum}, #{doctor.doctorId})
+    </insert>
+    <insert id="insertDoctor" parameterType="ADoctor"  keyProperty="doctor.doctorId" keyColumn="doctor_id">
+        insert into web_doctor(doctor_id,avatar, realName, position, department, specialty, status, user_id)
+        values (default, #{doctor.avatar}, #{doctor.realName}, #{doctor.position}, #{doctor.department}, #{doctor.specialty}, '0', #{doctor.userId})
+    </insert>
+
+    <insert id="insertDAccount" parameterType="ADoctor" keyProperty="doctor.userId" keyColumn="user_id">
+        insert into sys_account(user_id, name, password, role_id)
+        values (default, #{doctor.name}, #{doctor.password},'2')
+    </insert>
+
+
+    <update id="updateADoctor" parameterType="ADoctor">
+        update sys_message
+        <set>
+            seeTime = #{doctor.seeTime},
+            maxNum = #{doctor.maxNum},
+        </set>
+        where doctor_id = #{doctor.doctorId}
+    </update>
+
+<!--    <update id="deleteADoctorById" parameterType="WebDoctor">-->
+<!--        update web_doctor-->
+<!--        <set>-->
+<!--            status = '1',-->
+<!--        </set>-->
+<!--        where doctor_id = #{doctor.doctorId}-->
+<!--    </update>-->
+    <delete id="deleteADoctorById" parameterType="Long">
+        delete
+        from sys_message
+        where doctor_id = #{doctorId}
+    </delete>
+    <delete id="deleteDoctorById" parameterType="Long">
+        delete
+        from web_doctor
+        where user_id = #{userId}
+    </delete>
+    <delete id="deleteDAccountById" parameterType="Long">
+        delete
+        from sys_account
+        where user_id = #{userId}
+    </delete>
+
+
+
+
+
+
+    <!--////////////////////////////////////////////////////-->
     <select id="selectDoctorByUserId" parameterType="Long" resultMap="doctorVo">
         select d.*,sa.name,sa.password
         from web_doctor d
@@ -29,15 +114,7 @@
 
 
 
-    <insert id="insertDoctor" parameterType="WebDoctor"  >
-        insert into web_doctor(avatar, realName, position, department, specialty, status, user_id)
-        values (default, #{doctor.avatar}, #{doctor.position}, #{doctor.department}, #{doctor.specialty}, '0', #{doctor.user_id})
-    </insert>
 
-    <insert id="insertDAccount" parameterType="WebDoctor" keyProperty="doctor.userId" keyColumn="user_id">
-        insert into sys_account(user_id, name, password, role_id)
-        values (default, #{Doctor.name}, #{Doctor.password},'2')
-    </insert>
 
     <update id="updateDoctor" parameterType="WebDoctor">
         update web_doctor

@@ -79,9 +79,9 @@ public class WebPatientServiceImpl implements WebPatientService {
      */
     @Transactional(rollbackFor = Exception.class)
     public int updatePatient(WebPatient patient) throws Exception {
-//        if (webPatientMapper.updateAccount(patient)<=0){
-//            throw new Exception("更新失败");
-//        }
+        if (webPatientMapper.checkNameUnique(patient.getName())!=0){
+            throw new Exception("更新失败，该用户名已存在");
+        }
 //        return   webPatientMapper.updatePatient(patient);
         return webPatientMapper.updateAccount(patient);
     }

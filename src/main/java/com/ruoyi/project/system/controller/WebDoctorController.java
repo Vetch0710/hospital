@@ -46,7 +46,7 @@ public class WebDoctorController extends BaseController {
 
     @ApiOperation("获取员工列表")
     @PreAuthorize("@ss.hasPermi('web:doctorinfo:list')")
-    @GetMapping("/list")
+    @GetMapping("/info")
     public AjaxResult list() {
         LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
         Account user = loginUser.getUser();
@@ -62,21 +62,6 @@ public class WebDoctorController extends BaseController {
 
 
 
-//    @ApiOperation("添加用户")
-////    @PreAuthorize("@ss.hasPermi('system:user:add')")
-//    @RequestMapping("/register")
-//    @PostMapping
-//    public AjaxResult add(@Validated @RequestBody Map<String, String> params) throws Exception{
-//        if (sysLoginService.checkCode(params.get("code"), params.get("uuid"))) {
-//
-//
-////            WebPatient webPatient = new WebPatient(params.get("idCard"),params.get("username"),  SecurityUtils.encryptPassword(params.get("password")));
-//            WebPatient webPatient = new WebPatient(params.get("idCard"),params.get("username"),  params.get("password"));
-//            return toAjax(webPatientService.insertPatient(webPatient));
-//        }
-//
-//        return AjaxResult.error("验证码为空");
-//    }
 
 
     /**
