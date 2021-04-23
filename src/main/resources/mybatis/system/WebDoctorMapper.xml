@@ -45,6 +45,18 @@
             <if test="doctorId != null and doctorId != 0 ">
                 AND d.doctor_id= #{doctorId}
             </if>
+            <if test="position != null and position != 0 ">
+                AND d.position like concat('%', #{position}, '%')
+            </if>
+            <if test="department != null and department != 0 ">
+                AND d.department like concat('%', #{department}, '%')
+            </if>
+            <if test="remanNum != null and remanNum != 0 ">
+                AND sm.remanNum  #{remanNum}
+            </if>
+            <if test="startTime != null and startTime != 0 ">
+                AND SUBSTRING_INDEX(sm.seeTime,'-',-1)> #{startTime}
+            </if>
 
         </where>
         <!-- 数据范围过滤 -->

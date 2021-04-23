@@ -16,10 +16,14 @@ import java.util.concurrent.*;
  */
 public class aaa {
     public static void main(String[] args) throws IOException {
-        LocalDate today = LocalDate.now();
-        LocalDate nextWeek = LocalDate.now().plus(1, ChronoUnit.MONTHS);    //使用变量赋值
-        System.out.println("Today is : " + today);
-        System.out.println("Date after 1 week : " + nextWeek);
+        String[] appointTime ="17:30-23:00".split("-");
+        String []t1=new String[]{"00","30"};
+        String[] startTime = appointTime[0].split(":");
+        int startHour=Integer.parseInt(startTime[0]) ;
+        int startMin=Integer.parseInt(startTime[1]) ;
+        String[] endTime = appointTime[1].split(":");
+        int endHour=Integer.parseInt(endTime[0]) ;
+        int endMin=Integer.parseInt(endTime[1]) ;
 
     }
 }

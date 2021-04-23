@@ -20,6 +20,10 @@ public class QueryVo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     private String realName;
+    private String position;
+    private String department;
+    private String remanNum;
+    private String startTime;
     private Long doctorId  ;
 
 }
