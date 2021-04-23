@@ -71,19 +71,20 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
-  // {
-  //   path: '/dict',
-  //   component: Layout,
-  //   hidden: true,
-  //   children: [
-  //     {
-  //       path: 'type/data/:dictId(\\d+)',
-  //       component: (resolve) => require(['@/views/system/dict/data'], resolve),
-  //       name: 'Data',
-  //       meta: { title: '字典数据', icon: '' }
-  //     }
-  //   ]
-  // },
+  {
+
+    path: '/DInfo',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'doctorDInfo',
+        component: (resolve) => require(['@/views/web/patient/info'], resolve),
+        name: 'doctorDInfo',
+        meta: { title: '医生详细信息', icon: '' }
+      }
+    ]
+  },
   // {
   //   path: '/job',
   //   component: Layout,

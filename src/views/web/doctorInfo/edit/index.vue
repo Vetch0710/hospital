@@ -108,7 +108,7 @@
     mounted() {
     },
     methods: {
-      showEdit(row) {
+      showInfo(row) {
         //清空表单数据
         this.dialogFormVisible = true
         this.reset()

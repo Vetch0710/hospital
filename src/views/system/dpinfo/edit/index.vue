@@ -67,6 +67,7 @@
                 v-model="formData.endTime"
                 :picker-options="TimeOption"
                 :style="{width: '100%'}"
+                :blur="onChange"
               >
               </el-time-select>
 
@@ -74,7 +75,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="最大预约数量" prop="maxNum">
-              <el-input v-model="formData.maxNum" placeholder="请输入最大预约数量" show-word-limit clearable
+              <el-input v-model="formData.maxNum" placeholder="请输入最大预约数量"  clearable
                         prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
             </el-form-item>
           </el-col>
@@ -152,12 +153,12 @@
           startTime: [{
             required: true,
             message: '请输入就诊时间',
-            trigger: 'blur'
+            trigger: ' change'
           }],
           endTime: [{
             required: true,
             message: '请输入就诊时间',
-            trigger: 'blur'
+            trigger: ' change'
           }],
           maxNum: [{
             required: true,
@@ -194,6 +195,9 @@
     mounted() {
     },
     methods: {
+      onChange(){
+        console.log(typeof this.formData.endTime)
+      },
       showEdit(row) {
         //清空表单数据
         this.reset()
@@ -206,7 +210,7 @@
           this.formData = row
           if (this.formData.seeTime) {
             this.formData.seeTime = (row.seeTime).split('-')
-            this.formData.startTime = this.formData.seeTime[0]
+            this.formData.startTime =JSON.stringify(this.formData.seeTime[0])
             this.formData.endTime = this.formData.seeTime[1]
           }
 
@@ -229,7 +233,6 @@
           .catch(_ => {
           })
       },
-      //弹窗打开时----加载数据（下拉列表等等）
       //关闭弹窗
       Close() {
         this.dialogFormVisible = false
