@@ -3,7 +3,7 @@
 
     <el-row :gutter="20">
       <!--用户数据-->
-      <el-col :xs="24">
+      <el-col :xs="24" v-if="status==='0'">
         <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
           <el-form-item label="医生姓名">
             <el-input
@@ -85,8 +85,13 @@
           style="margin-right: 30%;margin-top: 60px;"
         />
       </el-col>
+      <el-col :xs="24" v-else>
+        <div>
+          由于您多次未遵守预约时间，您的账号已被冻结到{{banTime}}
+        </div>
+      </el-col>
     </el-row>
-    <Info ref="info"></Info>
+    <Info ref="info" @fetch-data="getList"></Info>
   </div>
 </template>
 
@@ -94,6 +99,9 @@
   import {
     listADoctor
   } from '@/api/system/doctor'
+  import {
+    getStatus
+  } from '@/api/system/appoint'
   import Info from './info/index'
 
   export default {
@@ -101,6 +109,8 @@
     components: { Info},
     data() {
       return {
+        status:'1',
+        banTime:'',
         baseUrl: process.env.VUE_APP_BASE_API,
         numOptions: [{ 'key': '可预约', value: '>0' }, { 'key': '不可预约', value: '=0' }],
         TimeOption: {
@@ -125,9 +135,15 @@
     },
     watch: {},
     created() {
-      this.getList()
+      getStatus().then(response => {
+        this.status=response.status
+        this.banTime=response.banTime
+        this.getList()
+      })
+
     },
     methods: {
+
       doctorDetailInfo(value){
         this.$refs['info'].showEdit(value)
 /*        this.$router.push({
@@ -156,7 +172,10 @@
         this.queryParams.pageNum = 1
         this.queryParams.pageSize = 10
         this.queryParams.realName = ''
-        this.queryParams.doctorId = ''
+        this.queryParams.position = ''
+        this.queryParams.department = ''
+        this.queryParams.remanNum = ''
+        this.queryParams.startTime = ''
         this.handleQuery()
       }
     }

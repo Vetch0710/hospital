@@ -91,7 +91,6 @@
         />
       </el-col>
     </el-row>
-
         <edit ref="edit" @fetch-data="getList" ></edit>
   </div>
 </template>
@@ -156,6 +155,11 @@ import Edit from './edit'
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
+        // if (row.seeTime){
+        //   const seeTime = [...row.seeTime.split('-')]
+        //   row.startTime = seeTime[0]
+        //   row.endTime = seeTime[1]
+        // }
         this.$refs['edit'].showEdit(row)
       },
       //删除数据

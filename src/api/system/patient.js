@@ -14,7 +14,7 @@ export function getPatient() {
 // 新增用户
 export function addPatient(data) {
   return request({
-    url: '/web/patient/register',
+    url: '/register',
     method: 'post',
     data: data
   })

@@ -12,43 +12,43 @@
       <el-row :gutter="15">
         <el-form ref="formData" :model="formData" :rules="rules" size="medium" label-width="110px">
 
-          <!--          <el-col :span="8" v-if="this.title=='添加'">-->
-          <!--            <el-form-item label="用户名" prop="name">-->
-          <!--              <el-input v-model="formData.name" placeholder="请输入姓名" show-word-limit clearable-->
-          <!--                        prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
-          <!--          <el-col :span="8" v-if="this.title=='添加'">-->
-          <!--            <el-form-item label="密码" prop="password">-->
-          <!--              <el-input v-model="formData.password" placeholder="请输入密码" show-word-limit clearable type="password"-->
-          <!--                        prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
-          <!--          <el-col :span="8">-->
-          <!--            <el-form-item label="真实姓名" prop="realName">-->
-          <!--              <el-input v-model="formData.realName" placeholder="请输入真实姓名" show-word-limit clearable-->
-          <!--                        prefix-icon='el-icon-mobile' :style="{width: '100%'}" :disabled="this.title=='编辑'"></el-input>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
-          <!--          <el-col :span="8">-->
-          <!--            <el-form-item label="职称" prop="position">-->
-          <!--              <el-input v-model="formData.position" placeholder="请输入真实姓名" show-word-limit clearable-->
-          <!--                        prefix-icon='el-icon-mobile' :style="{width: '100%'}" :disabled="this.title=='编辑'"></el-input>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
-          <!--          <el-col :span="8">-->
-          <!--            <el-form-item label="部门" prop="department">-->
-          <!--              <el-input v-model="formData.department" placeholder="请输入真实姓名" show-word-limit clearable-->
-          <!--                        prefix-icon='el-icon-mobile' :style="{width: '100%'}" :disabled="this.title=='编辑'"></el-input>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
-          <!--          <el-col :span="20">-->
-          <!--            <el-form-item label="专长" prop="specialty">-->
-          <!--              <el-input v-model="formData.specialty" placeholder="专长" show-word-limit clearable-->
-          <!--                        prefix-icon='el-icon-mobile' :style="{width: '100%'}" type="textarea"-->
-          <!--                        :disabled="this.title=='编辑'"></el-input>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
+                    <el-col :span="8" v-if="this.title=='添加'">
+                      <el-form-item label="用户名" prop="name">
+                        <el-input v-model="formData.name" placeholder="请输入姓名" show-word-limit clearable
+                                  prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8" v-if="this.title=='添加'">
+                      <el-form-item label="密码" prop="password">
+                        <el-input v-model="formData.password" placeholder="请输入密码" show-word-limit clearable type="password"
+                                  prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-form-item label="真实姓名" prop="realName">
+                        <el-input v-model="formData.realName" placeholder="请输入真实姓名" show-word-limit clearable
+                                  prefix-icon='el-icon-mobile' :style="{width: '100%'}" :disabled="this.title=='编辑'"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-form-item label="职称" prop="position">
+                        <el-input v-model="formData.position" placeholder="请输入真实姓名" show-word-limit clearable
+                                  prefix-icon='el-icon-mobile' :style="{width: '100%'}" :disabled="this.title=='编辑'"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-form-item label="部门" prop="department">
+                        <el-input v-model="formData.department" placeholder="请输入真实姓名" show-word-limit clearable
+                                  prefix-icon='el-icon-mobile' :style="{width: '100%'}" :disabled="this.title=='编辑'"></el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="20">
+                      <el-form-item label="专长" prop="specialty">
+                        <el-input v-model="formData.specialty" placeholder="专长" show-word-limit clearable
+                                  prefix-icon='el-icon-mobile' :style="{width: '100%'}" type="textarea"
+                                  :disabled="this.title=='编辑'"></el-input>
+                      </el-form-item>
+                    </el-col>
           <el-col :span="8">
             <el-form-item label="就诊开始时间" prop="startTime">
               <el-time-select
@@ -75,7 +75,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="最大预约数量" prop="maxNum">
-              <el-input v-model="formData.maxNum" placeholder="请输入最大预约数量"  clearable
+              <el-input v-model.number="formData.maxNum" placeholder="请输入最大预约数量" clearable
                         prefix-icon='el-icon-mobile' :style="{width: '100%'}"></el-input>
             </el-form-item>
           </el-col>
@@ -115,8 +115,8 @@
           seeTime: '',
           maxNum: '',
           remanNum: '',
-          endTime: '',
-          startTime: ''
+          endTime: '08:30',
+          startTime: '08:30'
         },
         //表单验证规则
         rules: {
@@ -181,12 +181,15 @@
     },
     computed: {},
     watch: {
-      /*       formData:{//深度监听，可监听到对象、数组的变化
-               handler(val, oldVal){
-
-               },
-               deep:true //true 深度监听
-             }*/
+      'formData.seeTime': {//深度监听，可监听到对象、数组的变化
+        handler(val, oldVal) {
+          console.log("~~~~~")
+          const seeTime = [...val.split('-')]
+          this.formData.startTime = seeTime[0]
+          this.formData.endTime = seeTime[1]
+        },
+        deep: true //true 深度监听
+      }
     },
     //获取部门名称集合、部门与项目匹配关系集合、项目与项目经理匹配关系集合、该用户的部门、部门经理、部门名
     props: {},
@@ -195,30 +198,20 @@
     mounted() {
     },
     methods: {
-      onChange(){
+      onChange() {
         console.log(typeof this.formData.endTime)
       },
       showEdit(row) {
         //清空表单数据
         this.reset()
-        this.dialogFormVisible = true
         if (!row) {
           this.title = '添加'
         } else {
           //给表单及uploadList赋值
           this.title = '编辑'
-          this.formData = row
-          if (this.formData.seeTime) {
-            this.formData.seeTime = (row.seeTime).split('-')
-            this.formData.startTime =JSON.stringify(this.formData.seeTime[0])
-            this.formData.endTime = this.formData.seeTime[1]
-          }
-
-          console.log(this.formData.startTime)
-          console.log(this.formData.endTime)
-          console.log(typeof this.formData.maxNum)
-
+          this.formData= {...this.formData,...row};
         }
+        this.dialogFormVisible = true
       },
       //弹窗关闭之前---确定弹窗是否关闭，即当弹窗非法关闭（鼠标点击弹窗外部，非直接点击弹窗内的取消按钮）时的判断
       handleClose(done) {

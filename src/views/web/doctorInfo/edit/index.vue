@@ -4,7 +4,8 @@
     <el-dialog v-bind="$attrs"
                v-on="$listeners"
                :visible.sync="dialogFormVisible"
-               :title="title">
+               :title="title"
+               @close="Close">
       <el-row :gutter="15">
         <el-form ref="formData" :model="doctor" :rules="rules" size="medium" label-width="94px">
           <el-col :span="13">
@@ -121,6 +122,8 @@
       Close() {
         this.dialogFormVisible = false
         this.reset()
+        this.$emit('fetch-data')
+
       },
       //重置表单
       reset() {

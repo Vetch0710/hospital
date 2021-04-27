@@ -85,7 +85,7 @@
         })
       },
       submit() {
-        this.$refs['edit'].showEdit(this.doctor)
+        this.$refs['edit'].showInfo(this.doctor)
       }
     }
   }

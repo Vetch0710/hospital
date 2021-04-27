@@ -3,30 +3,30 @@ import { praseStrEmpty } from "@/utils/ruoyi";
 
 
 
-// 查询用户详细
-export function getDisableTime() {
+// 获取医生可预约时间
+export function getActiveTime(doctorId,selectDay) {
   return request({
-    url: '/web/doctor/info' ,
+    url: '/web/appoint/appointTime/'+doctorId+'/'+selectDay ,
     method: 'get'
   })
 }
 
 
 
-// 修改用户
-export function updateDoctor(data) {
+// 预约
+export function addAppoint(data) {
   return request({
-    url: '/web/doctor',
-    method: 'put',
-    data: data
-  })
-}
-
-// 用户头像上传
-export function uploadAvatar(data) {
-  return request({
-    url: '/web/doctor/avatar',
+    url: '/web/appoint',
     method: 'post',
     data: data
   })
 }
+////////////////////////////////////////////
+// 获取用户状态
+export function getStatus() {
+  return request({
+    url: '/web/patient/status' ,
+    method: 'get'
+  })
+}
+
