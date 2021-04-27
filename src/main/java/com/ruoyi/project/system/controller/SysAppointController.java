@@ -101,7 +101,7 @@ public class SysAppointController extends BaseController {
     public AjaxResult download(@Validated @RequestBody HashMap<String, String> sysAppoint) throws Exception {
 
 
-        InputStream is = new FileInputStream(new File("src/main/resources/模板.docx"));
+        InputStream is = new FileInputStream(new File("C:\\Users\\75440\\Desktop\\毕设\\项目\\hospital\\hospital\\hospital_server\\模板.docx"));
         int frontText = Constants.RESOURCE_PREFIX.length();
         String filename = "";
 

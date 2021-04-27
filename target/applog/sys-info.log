@@ -1,0 +1,2 @@
+14:27:59.342 [main] INFO  c.r.RuoYiApplication - [logStarting,50] - Starting RuoYiApplication v2.3.0 on Vetch with PID 35776 (C:\Users\75440\Desktop\毕设\项目\hospital\hospital\hospital_server\target\hospital.jar started by vetch in C:\Users\75440\Desktop\毕设\项目\hospital\hospital\hospital_server\target)
+14:27:59.347 [main] INFO  c.r.RuoYiApplication - [logStartupProfileInfo,651] - The following profiles are active: druid
