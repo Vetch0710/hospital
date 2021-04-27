@@ -19,19 +19,22 @@
     </resultMap>
 
 
-    <select id="selectAppointTime" parameterType="Long" >
+    <select id="selectAppointTime" parameterType="Long" resultType="java.lang.String">
         select sm.seeTime
         from web_doctor d
                  left join sys_message sm on d.doctor_id = sm.doctor_id
         where  sm.doctor_id=#{doctorId} and sm.remanNum>0
     </select>
 
-    <select id="selectAppointedTime" parameterType="String" >
+    <select id="selectAppointedTime" parameterType="String" resultType="java.lang.String">
         select SUBSTRING_INDEX(seeTime,'-',-1)
         from sys_appoint
         where  seeTime like concat('%', #{time}, '%')
     </select>
 
 
-
+    <insert id="insertAppoint" parameterType="Appoint"  >
+        insert into sys_appoint(appoint_id, time, seeTime, status, message_id, patient_id)
+        values (default, #{appoint.time}, #{appoint.seeTime},'0', #{appoint.messageId}, #{appoint.patientId})
+    </insert>
 </mapper>

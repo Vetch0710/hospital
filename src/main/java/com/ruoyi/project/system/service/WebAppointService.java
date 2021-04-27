@@ -14,11 +14,12 @@ import java.util.List;
 public interface WebAppointService
 {
     /**
-     * 校验用户名称是否唯一
+     * 获取医生可预约时间
      *
      * @return 结果
      */
-    public List<String> selectAppointTime(Long doctorId);
+    public List<String> selectAppointTime(Long doctorId,String appointDay) throws Exception;
+    public int insertAppoint(String appointTime,Long massageId,Long patientId) throws Exception;
 
 
 }

@@ -56,7 +56,7 @@ public interface WebPatientService
      * @param userId 账户id
      * @return 结果
      */
-    public int updatePatientStatus(Long userId);
+    public List<String> updatePatientStatus(Long userId) throws Exception;
 
 
 

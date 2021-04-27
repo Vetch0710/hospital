@@ -10,10 +10,13 @@ import com.ruoyi.framework.security.service.SysLoginService;
 import com.ruoyi.framework.security.service.TokenService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
+import com.ruoyi.project.system.domain.ADoctor;
 import com.ruoyi.project.system.domain.Account;
 import com.ruoyi.project.system.domain.WebDoctor;
+import com.ruoyi.project.system.domain.WebPatient;
 import com.ruoyi.project.system.service.WebAppointService;
 import com.ruoyi.project.system.service.WebDoctorService;
+import com.ruoyi.project.system.service.WebPatientService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 登录验证
@@ -35,7 +39,7 @@ public class WebAppointController extends BaseController {
     @Autowired
     private WebAppointService webAppointService;
     @Autowired
-    private SysLoginService sysLoginService;
+    private WebPatientService webPatientService;
 
 
     @Autowired
@@ -43,16 +47,34 @@ public class WebAppointController extends BaseController {
 
 
     @ApiOperation("获取可预约时间")
-    @GetMapping("/appointTime/{id}")
-    public AjaxResult list(@PathVariable Long id) {
-
-        List<String> result = webAppointService.selectAppointTime(id);
-        if (result != null) {
+    @GetMapping("/appointTime/{id}/{appointDay}")
+    public AjaxResult list(@PathVariable Long id, @PathVariable String appointDay) {
+        try {
+            List<String> result = webAppointService.selectAppointTime(id,appointDay);
+            if (result == null) {
+                throw   new Exception("当前医生已没有预约名额");
+            }
             AjaxResult ajax = AjaxResult.success();
             ajax.put("time", result);
             return ajax;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return AjaxResult.error(e.getMessage());
         }
-        return AjaxResult.error("获取时间失败");
+    }
+
+
+        /**
+     * 预约
+     */
+    @ApiOperation("添加预约")
+    @PostMapping
+    public AjaxResult edit(@Validated @RequestBody Map<String,String> map) throws Exception {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        Account user = loginUser.getUser();
+        Long userId = user.getUserId();
+        WebPatient webPatient = webPatientService.selectPatientByUserId(userId);
+        return toAjax(webAppointService.insertAppoint(map.get("appointTime"),Long.parseLong( map.get("messageId")),webPatient.getPatientId()));
     }
 
 //    @ApiOperation("获取员工列表")

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -36,9 +38,11 @@ public class WebPatientServiceImpl implements WebPatientService {
      * @param userId 用户id
      * @return 结果
      */
-    public WebPatient selectPatientByUserId(Long userId){
-      return   webPatientMapper.selectPatientByUserId(userId);
-    };
+    public WebPatient selectPatientByUserId(Long userId) {
+        return webPatientMapper.selectPatientByUserId(userId);
+    }
+
+    ;
 
     /**
      * 校验用户名称是否唯一
@@ -46,8 +50,8 @@ public class WebPatientServiceImpl implements WebPatientService {
      * @param idCard 身份证
      * @return 结果
      */
-    public boolean checkPatientUnique(String idCard,String name) {
-        return (webPatientMapper.checkIdCardUnique(idCard)+webPatientMapper.checkNameUnique(name))!=0;
+    public boolean checkPatientUnique(String idCard, String name) {
+        return (webPatientMapper.checkIdCardUnique(idCard) + webPatientMapper.checkNameUnique(name)) != 0;
     }
 
     ;
@@ -62,7 +66,7 @@ public class WebPatientServiceImpl implements WebPatientService {
     @Transactional(rollbackFor = Exception.class)
     public int insertPatient(WebPatient patient) throws Exception {
         webPatientMapper.insertAccount(patient);
-        if (patient.getUserId()==null){
+        if (patient.getUserId() == null) {
             throw new Exception("插入失败");
         }
         return webPatientMapper.insertPatient(patient);
@@ -79,7 +83,9 @@ public class WebPatientServiceImpl implements WebPatientService {
      */
     @Transactional(rollbackFor = Exception.class)
     public int updatePatient(WebPatient patient) throws Exception {
-        if (webPatientMapper.checkNameUnique(patient.getName())!=0){
+        int i = webPatientMapper.checkNameUnique(patient.getName());
+        String oldName = webPatientMapper.selectNameByUserId(patient.getUserId());
+        if (i != 0 && !patient.getName().equals(oldName)) {
             throw new Exception("更新失败，该用户名已存在");
         }
 //        return   webPatientMapper.updatePatient(patient);
@@ -94,22 +100,40 @@ public class WebPatientServiceImpl implements WebPatientService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int updatePatientStatus(Long userId) {
+    public List<String> updatePatientStatus(Long userId) throws Exception {
+        List<String> result = new ArrayList<>();
+        String status, banTime = "";
+        String nowTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm"));
         Map<String, Object> map = webPatientMapper.selectPSBByUserId(userId);
-        if ((char) map.get("status")=='1'){
-            if (  LocalDate.now().compareTo((LocalDate)map.get("banTime"))>=0){
-                return webPatientMapper.updatePatientStatus('0',(LocalDate)map.get("banTime") ,userId);
+        if ("1".equals(map.get("status").toString())) {
+            if (nowTime.compareTo(map.get("banTime").toString()) >= 0) {
+                int row = webPatientMapper.updatePatientStatus('0', map.get("banTime").toString(), userId);
+                if (row == 0) {
+                    throw new Exception("修改状态失败");
+                }
+                status = "0";
+            } else {
+                status = "1";
+                banTime = map.get("banTime").toString();
             }
-        }else {
-            int i = sysAppointMapper.selectPANumByUserId(userId,(LocalDate)map.get("banTime"));
+
+        } else {
+            int i = sysAppointMapper.selectPANumByUserId(userId, map.get("banTime") == null ? null : map.get("banTime").toString(), nowTime);
             if (i > 3) {
-                char status = '1';
-                LocalDate banTime = LocalDate.now().plus(1, ChronoUnit.MONTHS);
-                return webPatientMapper.updatePatientStatus(status,banTime,userId);
+                String banTimes = LocalDateTime.now().plus(1, ChronoUnit.MONTHS).format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm"));
+                int i1 = webPatientMapper.updatePatientStatus('1', banTimes, userId);
+                if (i1 == 0) {
+                    throw new Exception("修改状态失败");
+                }
+                status = "1";
+                banTime = banTimes;
+            } else {
+                status = "0";
             }
         }
-
-        return 1;
+        result.add(status);
+        result.add(banTime);
+        return result;
     }
 
     ;

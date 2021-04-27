@@ -6,6 +6,7 @@ import com.ruoyi.project.system.domain.WebDoctor;
 import com.ruoyi.project.system.domain.WebPatient;
 import com.ruoyi.project.system.domain.vo.QueryVo;
 import com.ruoyi.project.system.mapper.SysAppointMapper;
+import com.ruoyi.project.system.mapper.WebAppointMapper;
 import com.ruoyi.project.system.mapper.WebDoctorMapper;
 import com.ruoyi.project.system.service.WebDoctorService;
 import com.ruoyi.project.system.service.WebPatientService;
@@ -31,7 +32,7 @@ public class WebDoctorServiceImpl implements WebDoctorService {
     private WebDoctorMapper webDoctorMapper;
 
     @Autowired
-    private SysAppointMapper sysAppointMapper;
+    private WebAppointMapper webAppointMapper;
 
 
 //---------------------------------以下是医生预约信息操作-----------------------
@@ -76,7 +77,13 @@ public class WebDoctorServiceImpl implements WebDoctorService {
      * @param aDoctor 员工信息
      * @return 结果
      */
-    public int updateADoctor(ADoctor aDoctor) {
+    public int updateADoctor(ADoctor aDoctor) throws Exception {
+        Integer oldMaxNum = webDoctorMapper.selectADoctorById(aDoctor.getMessageId()).getMaxNum();
+        int i = aDoctor.getRemanNum() + (aDoctor.getMaxNum()-oldMaxNum );
+        if (i<0){
+           throw new Exception("最大预约数，不可少于已预约数量");
+        }
+        aDoctor.setRemanNum(i);
         return webDoctorMapper.updateADoctor(aDoctor);
     }
 

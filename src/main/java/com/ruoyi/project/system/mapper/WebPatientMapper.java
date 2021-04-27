@@ -46,6 +46,7 @@ public interface WebPatientMapper
      */
     public int checkIdCardUnique(@Param("idCard")String idCard);
     public int checkNameUnique(@Param("name")String name);
+    public String selectNameByUserId(@Param("userId")Long userId);
 
 
     /**
@@ -86,7 +87,7 @@ public interface WebPatientMapper
      * @param banTime 禁止时间
      * @return 结果
      */
-    public int updatePatientStatus(@Param("status") char status,@Param("banTime") LocalDate banTime,@Param("userId") Long userId);
+    public int updatePatientStatus(@Param("status") char status,@Param("banTime") String banTime,@Param("userId") Long userId);
 
 
 

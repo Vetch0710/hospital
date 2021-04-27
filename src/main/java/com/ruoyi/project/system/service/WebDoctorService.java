@@ -38,7 +38,7 @@ public interface WebDoctorService
      * @param staff 员工信息
      * @return 结果
      */
-    public int updateADoctor(ADoctor aDoctor) ;
+    public int updateADoctor(ADoctor aDoctor) throws Exception;
 
     /**
      * 通过员工编号删除员工

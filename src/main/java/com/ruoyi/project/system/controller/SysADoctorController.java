@@ -97,7 +97,7 @@ public class SysADoctorController extends BaseController {
     @PreAuthorize("@ss.hasPermi('sys:dpinfo:edit')")
     @Log(title = "简历信息管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody ADoctor aDoctor) {
+    public AjaxResult edit(@Validated @RequestBody ADoctor aDoctor) throws Exception {
 
         return toAjax(webDoctorService.updateADoctor(aDoctor));
     }

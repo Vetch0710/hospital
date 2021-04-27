@@ -28,6 +28,7 @@ public interface WebDoctorMapper
      * @return 员工信息集合信息
      */
     public List<ADoctor> selectADoctorByQuery(QueryVo queryVo);
+    public ADoctor selectADoctorById(Long id);
 
 
     /**
@@ -59,6 +60,14 @@ public interface WebDoctorMapper
      * @return 结果
      */
     public int updateADoctor(@Param("doctor")ADoctor aDoctor) ;
+    /**
+     * 修改员工信息
+     *
+     * @param aDoctor 员工信息
+     * @return 结果
+     */
+    public int updateADoctorRemanNum(@Param("remanNum")int remanNum,@Param("messageId")Long messageId) ;
+    public int selectADoctorRemanNum(@Param("messageId")Long messageId) ;
 
     /**
      * 通过员工编号删除员工

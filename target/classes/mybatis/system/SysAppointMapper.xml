@@ -2,51 +2,86 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.project.system.mapper.WebPatientMapper">
+<mapper namespace="com.ruoyi.project.system.mapper.SysAppointMapper">
+
+    <resultMap type="SysAppoint" id="SysAppointVo">
+        <result property="appointId" column="appoint_id"/>
+        <result property="time" column="time"/>
+        <result property="seeTime" column="seeTime"/>
+        <result property="status" column="status"/>
+        <result property="messageId" column="message_id"/>
+        <result property="realName" column="realName"/>
+        <result property="position" column="position"/>
+        <result property="department" column="department"/>
+        <result property="specialty" column="specialty"/>
+        <result property="name" column="name"/>
+    </resultMap>
 
 
-
-
-    <select id="selectPANumByUserId" parameterType="Long" resultType="int">
+    <select id="selectPANumByUserId" resultType="int">
         select count(1)
-        from sys_appoint  a
+        from sys_appoint a
         left join web_patient p on p.patient_id=a.patient_id
         left join sys_account ac on p.user_id=ac.user_id
-        where ac.user_id = #{userid} and a.status=0
+        where ac.user_id =#{userId}
+        and a.status=0
+        and a.seeTime <![CDATA[<]]> #{nowTime}
         <if test="banTime != null and banTime != ''">
-            and a.time>banTime
+            and a.time <![CDATA[>]]> #{banTime}
         </if>
-
     </select>
 
-<!--    <insert id="insertPatient" parameterType="WebPatient" useGeneratedKeys="true" keyProperty="patientId">-->
-<!--        insert into web_patient(patient_id, idCard, user_id)-->
-<!--        values (default, #{patient.idCard}, #{patient.userId})-->
-<!--    </insert>-->
+    <select id="selectAByMessageId" resultType="String">
+        select a.seeTime
+        from sys_appoint a
+        where appoint_id=#{appointId}
+    </select>
+    <delete id="deleteADoctorById" >
+        delete
+        from sys_appoint
+        where appoint_id=#{appointId}
+    </delete>
 
-<!--    <insert id="insertAccount" parameterType="WebPatient" useGeneratedKeys="true" keyProperty="userId">-->
-<!--        insert into sys_account(user_id, name, password, role_id)-->
-<!--        values (default, #{patient.name}, #{patient.password},'3')-->
-<!--    </insert>-->
 
-<!--    <update id="updatePatient" parameterType="WebPatient">-->
-<!--        update web_patient-->
-<!--        <set>-->
-<!--            idCard = #{patient.idCard}-->
-<!--        </set>-->
+    <select id="selectADoctorByUserId" resultMap="SysAppointVo">
+        select a.appoint_id,
+               a.time,
+               a.seeTime,
+               a.status,
+               a.message_id,
+               wd.realName,
+               wd.position,
+               wd.department,
+               wd.specialty,
+               (select name
+                FROM web_patient wp
+                         left join sys_account ac on wp.user_id = ac.user_id
+                WHERE wp.patient_id = a.patient_id) as name
+        from sys_appoint a
+                 left join sys_message sm on a.message_id = sm.message_id
+                 left join web_doctor wd on sm.doctor_id = wd.doctor_id
+        where wd.doctor_id = #{doctorId}
+    </select>
 
-<!--        where user_id = #{patient.userId}-->
-<!--    </update>-->
 
-<!--    <update id="updateAccount" parameterType="WebPatient">-->
-<!--        update sys_account-->
-<!--        <set>-->
-<!--            name = #{patient.name},-->
-<!--            password = #{patient.password}-->
-<!--        </set>-->
-
-<!--        where user_id = #{patient.userId}-->
-<!--    </update>-->
-
+    <select id="selectAPatientByUserId" resultMap="SysAppointVo">
+        select a.appoint_id,
+               a.time,
+               a.seeTime,
+               a.status,
+               a.message_id,
+               wd.realName,
+               wd.position,
+               wd.department,
+               wd.specialty,
+               (select name
+                FROM web_patient wp
+                         left join sys_account ac on wp.user_id = ac.user_id
+                WHERE wp.patient_id = a.patient_id) as name
+        from sys_appoint a
+                 left join sys_message sm on a.message_id = sm.message_id
+                 left join web_doctor wd on sm.doctor_id = wd.doctor_id
+        where a.patient_id = #{patientId}
+    </select>
 
 </mapper>

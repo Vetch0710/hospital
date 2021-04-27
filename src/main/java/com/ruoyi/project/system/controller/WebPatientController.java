@@ -66,23 +66,7 @@ public class WebPatientController extends BaseController {
 
 
 
-    @ApiOperation("添加用户")
-//    @PreAuthorize("@ss.hasPermi('system:user:add')")
-    @RequestMapping("/register")
-    @PostMapping
-    public AjaxResult add(@Validated @RequestBody Map<String, String> params) throws Exception{
-        if (sysLoginService.checkCode(params.get("code"), params.get("uuid"))) {
-            if (webPatientService.checkPatientUnique(params.get("idCard"),params.get("username"))) {
-                return AjaxResult.error("新增用户'" + params.get("username") + "'失败，用户已存在");
-            }
 
-//            WebPatient webPatient = new WebPatient(params.get("idCard"),params.get("username"),  SecurityUtils.encryptPassword(params.get("password")));
-            WebPatient webPatient = new WebPatient(params.get("idCard"),params.get("username"),  params.get("password"));
-            return toAjax(webPatientService.insertPatient(webPatient));
-        }
-
-        return AjaxResult.error("验证码为空");
-    }
 
 
     /**
@@ -96,6 +80,21 @@ public class WebPatientController extends BaseController {
 //        Account account = loginUser.getUser();
 //        webPatient.setUserId(account.getUserId());
         return toAjax(webPatientService.updatePatient(webPatient));
+    }
+
+   /**
+     * 修改用户
+     */
+    @ApiOperation("查看用户状态")
+    @GetMapping("/status")
+    public AjaxResult getStatus()throws Exception {
+        LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+        Account account = loginUser.getUser();
+        List<String> result = webPatientService.updatePatientStatus(account.getUserId());
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.put("status",result.get(0));
+        ajaxResult.put("banTime",result.get(1));
+        return ajaxResult;
     }
 
 

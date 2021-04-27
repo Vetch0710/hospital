@@ -19,6 +19,7 @@ public class ADoctor extends WebDoctor
     private static final long serialVersionUID = 1L;
 
 
+    private Long messageId;
     private String seeTime;
     private Integer maxNum;
     private Integer remanNum;

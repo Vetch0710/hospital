@@ -32,12 +32,13 @@
         <result property="seeTime" column="seeTime"/>
         <result property="maxNum" column="maxNum"/>
         <result property="remanNum" column="remanNum"/>
+        <result property="messageId" column="message_id"/>
     </resultMap>
 
     <select id="selectADoctorByQuery" parameterType="QueryVo" resultMap="ADoctorVo">
-        select d.*,sm.seeTime,sm.maxNum,sm.remanNum
+        select d.*,sm.seeTime,sm.maxNum,sm.remanNum,sm.message_id
         from web_doctor d
-                 left join sys_message sm on d.doctor_id = sm.doctor_id
+        left join sys_message sm on d.doctor_id = sm.doctor_id
         <where>
             <if test="realName != null and realName != ''">
                 AND d.realName like concat('%', #{realName}, '%')
@@ -45,16 +46,16 @@
             <if test="doctorId != null and doctorId != 0 ">
                 AND d.doctor_id= #{doctorId}
             </if>
-            <if test="position != null and position != 0 ">
+            <if test="position != null and position != '' ">
                 AND d.position like concat('%', #{position}, '%')
             </if>
-            <if test="department != null and department != 0 ">
+            <if test="department != null and department != '' ">
                 AND d.department like concat('%', #{department}, '%')
             </if>
-            <if test="remanNum != null and remanNum != 0 ">
-                AND sm.remanNum  #{remanNum}
+            <if test="remanNum != null and remanNum != '' ">
+                AND sm.remanNum ${remanNum}
             </if>
-            <if test="startTime != null and startTime != 0 ">
+            <if test="startTime != null and startTime != '' ">
                 AND SUBSTRING_INDEX(sm.seeTime,'-',-1)> #{startTime}
             </if>
 
@@ -62,19 +63,26 @@
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
+    <select id="selectADoctorById" parameterType="Long" resultMap="ADoctorVo">
+        select d.*, sm.seeTime, sm.maxNum, sm.remanNum, sm.message_id
+        from web_doctor d
+                 left join sys_message sm on d.doctor_id = sm.doctor_id
+        where sm.message_id = #{id}
+    </select>
 
     <insert id="insertADoctor" parameterType="ADoctor">
         insert into sys_message(message_id, seeTime, maxNum, remanNum, doctor_id)
         values (default, #{doctor.seeTime}, #{doctor.maxNum}, #{doctor.maxNum}, #{doctor.doctorId})
     </insert>
-    <insert id="insertDoctor" parameterType="ADoctor"  keyProperty="doctor.doctorId" keyColumn="doctor_id">
-        insert into web_doctor(doctor_id,avatar, realName, position, department, specialty, status, user_id)
-        values (default, #{doctor.avatar}, #{doctor.realName}, #{doctor.position}, #{doctor.department}, #{doctor.specialty}, '0', #{doctor.userId})
+    <insert id="insertDoctor" parameterType="ADoctor" keyProperty="doctor.doctorId" keyColumn="doctor_id">
+        insert into web_doctor(doctor_id, avatar, realName, position, department, specialty, status, user_id)
+        values (default, #{doctor.avatar}, #{doctor.realName}, #{doctor.position}, #{doctor.department},
+                #{doctor.specialty}, '0', #{doctor.userId})
     </insert>
 
     <insert id="insertDAccount" parameterType="ADoctor" keyProperty="doctor.userId" keyColumn="user_id">
         insert into sys_account(user_id, name, password, role_id)
-        values (default, #{doctor.name}, #{doctor.password},'2')
+        values (default, #{doctor.name}, #{doctor.password}, '2')
     </insert>
 
 
@@ -83,17 +91,31 @@
         <set>
             seeTime = #{doctor.seeTime},
             maxNum = #{doctor.maxNum},
+            remanNum = #{doctor.remanNum}
         </set>
         where doctor_id = #{doctor.doctorId}
     </update>
+    <update id="updateADoctorRemanNum">
+        update sys_message
+        <set>
+            remanNum = #{remanNum}
 
-<!--    <update id="deleteADoctorById" parameterType="WebDoctor">-->
-<!--        update web_doctor-->
-<!--        <set>-->
-<!--            status = '1',-->
-<!--        </set>-->
-<!--        where doctor_id = #{doctor.doctorId}-->
-<!--    </update>-->
+        </set>
+        where message_id = #{messageId}
+    </update>
+    <select id="selectADoctorRemanNum" resultType="int">
+        select remanNum
+        from sys_message
+        where message_id = #{messageId}
+    </select>
+
+    <!--    <update id="deleteADoctorById" parameterType="WebDoctor">-->
+    <!--        update web_doctor-->
+    <!--        <set>-->
+    <!--            status = '1',-->
+    <!--        </set>-->
+    <!--        where doctor_id = #{doctor.doctorId}-->
+    <!--    </update>-->
     <delete id="deleteADoctorById" parameterType="Long">
         delete
         from sys_message
@@ -111,33 +133,26 @@
     </delete>
 
 
-
-
-
-
     <!--////////////////////////////////////////////////////-->
     <select id="selectDoctorByUserId" parameterType="Long" resultMap="doctorVo">
-        select d.*,sa.name,sa.password
+        select d.*, sa.name, sa.password
         from web_doctor d
-        left join sys_account sa on d.user_id = sa.user_id
+                 left join sys_account sa on d.user_id = sa.user_id
         where d.user_id = #{userId}
     </select>
-
-
-
-
 
 
     <update id="updateDoctor" parameterType="WebDoctor">
         update web_doctor
         <set>
+            realName = #{doctor.realName},
             position = #{doctor.position},
             department = #{doctor.department},
-            specialty = #{doctor.specialty},
+            specialty = #{doctor.specialty}
         </set>
         where user_id = #{doctor.userId}
     </update>
-    <update id="updateDoctorAvatar" >
+    <update id="updateDoctorAvatar">
         update web_doctor
         <set>
             avatar = #{avatar},
